@@ -1,0 +1,120 @@
+- id: "1"
+  title: Database & Backend Foundation
+  description: >-
+    Set up PostgreSQL with migrations, database connection layer, and seed the
+    3 existing products. Update health check to verify DB connectivity.
+  spec_checkpoint: true
+  invoke_dev_with: >-
+    Use pgx or database/sql with lib/pq for PostgreSQL. Create migration files
+    in internal/database/migrations/. Seed Forever Pants ($260), Forever Shirt
+    ($155), Forever Shorts ($300). Keep existing net/http router.
+- id: "2"
+  title: User Authentication (Backend)
+  description: >-
+    Implement user registration, login, JWT middleware, and profile endpoints.
+    CAP-1: users can register, log in, and access protected routes.
+  spec_checkpoint: true
+  invoke_dev_with: >-
+    Use golang-jwt/jwt for tokens, bcrypt for passwords. JWT payload includes
+    user_id and role. Middleware checks Authorization: Bearer header. Roles:
+    customer (default), admin.
+- id: "3"
+  title: Product Catalog (Backend)
+  description: >-
+    Product list with pagination, filtering, sorting, search. Product detail
+    with variants and reviews. Admin CRUD endpoints. CAP-2 and CAP-3 backend.
+  spec_checkpoint: true
+  invoke_dev_with: >-
+    Query params: page, limit, category, min_price, max_price, sort, search.
+    Slugify product names for URLs. Admin endpoints require admin role.
+- id: "4"
+  title: Shopping Cart (Backend)
+  description: >-
+    Guest and authenticated cart support via X-Session-ID header and JWT.
+    Add, update, remove items. Merge guest cart on login. CAP-4 backend.
+  spec_checkpoint: true
+  invoke_dev_with: >-
+    Guest carts use session_id column (UUID generated client-side). User carts
+    use user_id. On login, merge guest items into user cart (add quantities for
+    same product+variant, insert new ones). Cart endpoint is optional auth.
+- id: "5"
+  title: Checkout & Orders (Backend)
+  description: >-
+    Create order from cart, Stripe PaymentIntent creation, order list and
+    detail endpoints, admin order status management. CAP-5 and CAP-6 backend.
+  spec_checkpoint: true
+  invoke_dev_with: >-
+    Extend existing Stripe handler to create order record on success. Order
+    status flow: pending -> paid -> shipped -> delivered. Denormalize product
+    name/price/variant into order_items at time of purchase.
+- id: "6"
+  title: Reviews (Backend)
+  description: >-
+    Add review endpoint (one per user per product) and list reviews for a
+    product. CAP-3 backend (reviews section).
+  spec_checkpoint: true
+  invoke_dev_with: >-
+    Rating 1-5 integer. UNIQUE constraint on (product_id, user_id). Return
+    avg_rating and review_count on product detail endpoint.
+- id: "7"
+  title: S3 Image Upload (Backend)
+  description: >-
+    Image upload endpoint using S3-compatible storage (MinIO/AWS). Presigned
+    URLs for product images. CAP-3 backend (image gallery).
+  spec_checkpoint: true
+  invoke_dev_with: >-
+    Use minio-go SDK. Generate presigned URLs for GET. Upload endpoint accepts
+    multipart form, stores in products bucket, returns image path. Add images
+    column to products as TEXT[].
+- id: "8"
+  title: Vue 3 Frontend Foundation
+  description: >-
+    Vite + Vue 3 + Pinia + Vue Router + Tailwind CSS setup. App shell with
+    navbar/footer, route guards, Axios API service, auth store, login/register
+    pages. CAP-1 and CAP-8 frontend foundation.
+  spec_checkpoint: true
+  invoke_dev_with: >-
+    Use @vueuse/core for utilities. Axios instance with JWT interceptor.
+    Route guards: protected routes redirect to /login, admin routes check role.
+    Tailwind for all styling. Mobile-responsive navbar with hamburger menu.
+- id: "9"
+  title: Product Pages (Frontend)
+  description: >-
+    Product catalog with filters, search, pagination. Product detail page
+    with image gallery, variant selector, reviews. CAP-2 and CAP-3 frontend.
+  spec_checkpoint: true
+  invoke_dev_with: >-
+    Product grid: 1 col mobile, 2 col tablet, 3-4 col desktop. Filter sidebar
+    with category checkboxes and price range. Product detail: image carousel,
+    size/color selector, add-to-cart button, reviews section with form.
+- id: "10"
+  title: Cart & Checkout (Frontend)
+  description: >-
+    Cart page with quantity adjusters and guest cart support. Checkout page
+    with address form and Stripe Payment Element. CAP-4 and CAP-5 frontend.
+  spec_checkpoint: true
+  invoke_dev_with: >-
+    Cart: table layout with product image, name, variant, price, quantity +/-,
+    line total, remove button. Guest cart uses localStorage sessionId. Checkout:
+    two-column layout, address form validation, @stripe/vue-stripe-js Payment
+    Element, order confirmation on success.
+- id: "11"
+  title: Order Pages (Frontend)
+  description: >-
+    Order history list and order detail page. CAP-6 frontend.
+  spec_checkpoint: true
+  invoke_dev_with: >-
+    Order list: table with ID, date, status badge (colored), total, items
+    count, view link. Order detail: info block, items list, shipping address,
+    payment status. Empty state for no orders.
+- id: "12"
+  title: Admin Pages (Frontend)
+  description: >-
+    Admin dashboard with stats, product CRUD, order management, user list.
+    CAP-7 frontend.
+  spec_checkpoint: true
+  invoke_dev_with: >-
+    Dashboard: stat cards (orders, revenue, users, products), recent orders
+    table. Products: table with thumbnail, name, category, price, stock,
+    edit/delete actions, create modal. Orders: table with status dropdown.
+    Users: table with name, email, role, join date.

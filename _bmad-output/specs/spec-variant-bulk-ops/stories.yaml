@@ -1,0 +1,44 @@
+- id: "1"
+  title: Auto-generate variants from option groups
+  description: >-
+    Implement CAP-1 and CAP-2: an admin endpoint that generates the cartesian
+    product of a product's option group values into variants, skipping
+    combinations that already exist, enforcing the 500-variant cap.
+  spec_checkpoint: false
+  done_checkpoint: false
+  invoke_dev_with: >-
+    Add a SKU-generation helper: slugify(product.slug + "-" + each selected
+    option value's label), lowercase, hyphenated, append a numeric suffix on
+    unique-constraint collision. Add a repository method that, given a
+    product_id, loads its option groups/values, computes the full cartesian
+    product of value combinations, filters out combinations that already
+    exist (reuse the existing HasVariantCombination check), and bulk-inserts
+    the rest as new variants with stock=0, generated SKU, null
+    weight/length/width/height, via the existing CreateVariant path so
+    variant_option_values junction rows are written identically to manual
+    creation. Enforce the 500-variant-per-product cap on both this endpoint
+    and the existing single-variant CreateVariant handler (reject with 400 if
+    the resulting total would exceed it). Return 400 if the product has 0
+    option groups. Add POST /api/admin/products/{id}/variants/generate
+    returning a summary: created count, skipped (already-existing) count, and
+    the list of created variants. Require the existing admin auth middleware.
+- id: "2"
+  title: Bulk-update variants
+  description: >-
+    Implement CAP-3: an admin endpoint that applies stock/SKU/dimension
+    updates to many existing variants of a product in one request, with
+    per-item independent validation and results.
+  spec_checkpoint: false
+  done_checkpoint: true
+  invoke_dev_with: >-
+    Add PATCH /api/admin/products/{id}/variants/bulk accepting a JSON array
+    of {variant_id, stock?, sku?, weight?, length?, width?, height?} (same
+    optional-field shape as UpdateVariantRequest, minus option_values --
+    reject the request with 400 if any item includes option_values). For each
+    item: verify the variant exists and belongs to the path's product_id
+    (else mark that item failed with a clear reason, do not abort the rest of
+    the batch), then apply via the existing UpdateVariant repository path
+    (including its SKU-uniqueness handling). Process items independently, not
+    in one transaction. Return a per-item result array
+    (variant_id, success, error?) alongside overall
+    succeeded/failed counts. Require the existing admin auth middleware.

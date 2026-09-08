@@ -1,0 +1,72 @@
+- id: "1"
+  title: Database migration + multiple categories + public category endpoint
+  description: >-
+    Fresh schema migration: create product_categories join table, product_tags,
+    product_image_order tables, add new columns to products and product_variants,
+    drop old category/active columns. Implement CAP-1 (admin assigns multiple
+    categories) and CAP-3 (public category listing with product counts).
+  invoke_dev_with: >-
+    Follow data-model-changes.md companion for exact SQL. Create new migration
+    in database.go. Update Product model to use []Category instead of string.
+    Add product_categories repository methods. Add public GET /api/categories
+    endpoint. Update admin category management to work with new schema.
+- id: "2"
+  title: Variant CRUD endpoints
+  description: >-
+    Implement CAP-2: admin endpoints to create, update, and delete product
+    variants via API. Validate duplicate SKU per product. Block deletion of
+    variants referenced by active cart items or orders.
+  invoke_dev_with: >-
+    Add POST/PUT/DELETE endpoints under /api/admin/products/{id}/variants/.
+    Use existing product_variants table. Add variant repository methods for
+    Create, Update, Delete. Add SKU uniqueness validation within a product.
+    Check cart_items and order_items before deleting a variant.
+- id: "3"
+  title: Product tags + sale pricing
+  description: >-
+    Implement CAP-4 (product tags with max 12, filter by tags) and CAP-5
+    (compare_at_price for sale pricing display).
+  invoke_dev_with: >-
+    Add product_tags repository methods (Add, Remove, ListByProduct). Enforce
+    max 12 tags per product in handler validation. Add POST/DELETE tag endpoints
+    under /api/admin/products/{id}/tags/. Add tags filter to product listing
+    (comma-separated query param). Add compare_at_price to Product model,
+    create/update handlers. Update ListProducts to filter by tags.
+- id: "4"
+  title: Product status lifecycle + weight/dimensions
+  description: >-
+    Implement CAP-6 (draft/published/archived status) and CAP-7 (weight and
+    dimensions at product and variant level, variant overrides product).
+  invoke_dev_with: >-
+    Add status field to Product model and all create/update handlers. Filter
+    storefront queries to only return published products. Admin endpoints can
+    filter by any status. Add weight/length/width/height to Product and
+    ProductVariant models. Update variant create/update to accept dimensions.
+    In checkout/shipping logic, use variant dimensions when present, fall back
+    to product dimensions.
+- id: "5"
+  title: SEO metadata + image ordering
+  description: >-
+    Implement CAP-8 (meta_title, meta_description, og_image) and CAP-9
+    (primary image flag and sort order via product_image_order table).
+  invoke_dev_with: >-
+    Add SEO fields to Product model and create/update handlers. Default
+    meta_title to product name, meta_description to truncated description,
+    og_image to first image when not provided. Create product_image_order
+    repository methods. Add PUT /api/admin/products/{id}/images/order endpoint
+    for reordering and setting primary. Update product detail response to
+    include ordered images with primary flag.
+- id: "6"
+  title: Integration — update existing handlers and responses
+  description: >-
+    Update all existing product handlers and repositories to work with the new
+    schema. Ensure list and detail responses include new fields. Update cart
+    and order handlers for new product model.
+  invoke_dev_with: >-
+    Update product repository List and FindBySlug to join product_categories,
+    product_tags, product_image_order. Update ProductListResponse and
+    ProductWithVariants to include categories, tags, compare_at_price, status,
+    dimensions, SEO fields, ordered images. Update cart handler to use new
+    Product model. Update order creation to snapshot correct product data.
+    Run all existing tests, fix any broken ones. Add tests for new
+    functionality.

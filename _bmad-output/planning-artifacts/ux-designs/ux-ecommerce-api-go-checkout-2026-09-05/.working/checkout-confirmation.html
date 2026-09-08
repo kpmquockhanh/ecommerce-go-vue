@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Order Confirmation</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: system-ui, -apple-system, sans-serif; background: #F8F6F3; color: #1A1A1A; }
+    
+    .header { background: #fff; border-bottom: 1px solid #E8E4DD; padding: 16px 24px; }
+    .header-inner { max-width: 1152px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; }
+    .logo { font-size: 20px; font-weight: 700; color: #2D6A4F; text-decoration: none; }
+    
+    .container { max-width: 896px; margin: 0 auto; padding: 48px 24px; }
+    
+    .confirmation-card { background: #fff; border: 1px solid #E8E4DD; border-radius: 12px; padding: 48px; text-align: center; }
+    
+    .success-icon { width: 80px; height: 80px; background: #D8F3DC; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 24px; font-size: 40px; }
+    
+    .confirmation-title { font-size: 28px; font-weight: 700; margin-bottom: 8px; }
+    .confirmation-subtitle { font-size: 16px; color: #6B6B6B; margin-bottom: 32px; }
+    
+    .order-number { background: #F8F6F3; border-radius: 8px; padding: 16px 24px; display: inline-block; margin-bottom: 32px; }
+    .order-label { font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; color: #6B6B6B; margin-bottom: 4px; }
+    .order-value { font-size: 20px; font-weight: 700; }
+    
+    .confirmation-details { text-align: left; margin-bottom: 32px; }
+    .detail-section { margin-bottom: 24px; }
+    .detail-title { font-size: 14px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: #6B6B6B; margin-bottom: 8px; }
+    .detail-content { font-size: 14px; line-height: 1.6; }
+    
+    .email-notice { background: #D8F3DC; border-radius: 8px; padding: 16px; display: flex; align-items: center; gap: 12px; margin-bottom: 32px; }
+    .email-icon { font-size: 20px; }
+    .email-text { font-size: 14px; }
+    
+    .btn-group { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+    .btn-primary { background: #2D6A4F; color: #fff; border: none; padding: 12px 24px; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; }
+    .btn-primary:hover { background: #1B4332; }
+    .btn-secondary { background: transparent; color: #6B6B6B; border: 1px solid #E8E4DD; padding: 12px 24px; border-radius: 8px; font-size: 14px; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; }
+    .btn-secondary:hover { background: #F0EDE8; }
+    
+    /* Recommended Products */
+    .recommended-section { margin-top: 48px; }
+    .recommended-title { font-size: 20px; font-weight: 700; margin-bottom: 24px; text-align: center; }
+    .recommended-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    .recommended-card { background: #fff; border: 1px solid #E8E4DD; border-radius: 8px; overflow: hidden; text-decoration: none; color: inherit; }
+    .recommended-img { aspect-ratio: 1; background: #F0EDE8; }
+    .recommended-info { padding: 12px; }
+    .recommended-name { font-size: 14px; font-weight: 500; margin-bottom: 4px; }
+    .recommended-price { font-size: 14px; font-weight: 700; }
+    
+    /* Trust Bar */
+    .trust-bar { margin-top: 48px; padding: 20px; background: #fff; border: 1px solid #E8E4DD; border-radius: 12px; display: flex; justify-content: space-around; align-items: center; flex-wrap: wrap; gap: 20px; }
+    .trust-item { display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center; }
+    .trust-icon { font-size: 24px; }
+    .trust-icon.green { color: #2D6A4F; }
+    .trust-icon.gray { color: #6B6B6B; }
+    .trust-label { font-size: 12px; color: #6B6B6B; }
+    
+    @media (max-width: 768px) {
+      .confirmation-card { padding: 32px 20px; }
+      .btn-group { flex-direction: column; }
+      .recommended-grid { grid-template-columns: 1fr 1fr; }
+      .trust-bar { flex-direction: row; flex-wrap: wrap; }
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="header-inner">
+      <a href="/" class="logo">E-Shop</a>
+    </div>
+  </header>
+  
+  <div class="container">
+    <div class="confirmation-card">
+      <div class="success-icon">✓</div>
+      
+      <h1 class="confirmation-title">Thank you for your order!</h1>
+      <p class="confirmation-subtitle">Your order has been placed successfully and is being processed.</p>
+      
+      <div class="order-number">
+        <div class="order-label">Order Number</div>
+        <div class="order-value">#ORD-12345</div>
+      </div>
+      
+      <div class="email-notice">
+        <span class="email-icon">📧</span>
+        <span class="email-text">A confirmation email has been sent to <strong>john@example.com</strong></span>
+      </div>
+      
+      <div class="confirmation-details">
+        <div class="detail-section">
+          <div class="detail-title">Shipping Address</div>
+          <div class="detail-content">
+            John Doe<br>
+            123 Main Street<br>
+            New York, NY 10001<br>
+            United States
+          </div>
+        </div>
+        
+        <div class="detail-section">
+          <div class="detail-title">Estimated Delivery</div>
+          <div class="detail-content">
+            <strong>September 10-12, 2026</strong><br>
+            Free standard shipping
+          </div>
+        </div>
+      </div>
+      
+      <div class="btn-group">
+        <a href="/orders/12345" class="btn-primary">
+          View Order Details
+          <span>→</span>
+        </a>
+        <a href="/products" class="btn-secondary">
+          Continue Shopping
+        </a>
+      </div>
+    </div>
+    
+    <!-- Recommended Products -->
+    <div class="recommended-section">
+      <h2 class="recommended-title">You might also like</h2>
+      <div class="recommended-grid">
+        <a href="/products/forever-shorts" class="recommended-card">
+          <div class="recommended-img"></div>
+          <div class="recommended-info">
+            <div class="recommended-name">Forever Shorts</div>
+            <div class="recommended-price">$300.00</div>
+          </div>
+        </a>
+        <a href="/products/eco-hoodie" class="recommended-card">
+          <div class="recommended-img"></div>
+          <div class="recommended-info">
+            <div class="recommended-name">Eco Hoodie</div>
+            <div class="recommended-price">$180.00</div>
+          </div>
+        </a>
+        <a href="/products/sustainable-tee" class="recommended-card">
+          <div class="recommended-img"></div>
+          <div class="recommended-info">
+            <div class="recommended-name">Sustainable Tee</div>
+            <div class="recommended-price">$45.00</div>
+          </div>
+        </a>
+      </div>
+    </div>
+    
+    <!-- Trust Bar -->
+    <div class="trust-bar">
+      <div class="trust-item">
+        <span class="trust-icon green">🛡️</span>
+        <span class="trust-label">Money-back guarantee</span>
+      </div>
+      <div class="trust-item">
+        <span class="trust-icon gray">🔒</span>
+        <span class="trust-label">Secure payment by Stripe</span>
+      </div>
+      <div class="trust-item">
+        <span class="trust-icon gray">📦</span>
+        <span class="trust-label">Free returns within 30 days</span>
+      </div>
+      <div class="trust-item">
+        <span class="trust-icon gray">👥</span>
+        <span class="trust-label">Trusted by 10,000+ shoppers</span>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

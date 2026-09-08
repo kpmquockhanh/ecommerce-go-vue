@@ -1,0 +1,79 @@
+- id: "1"
+  title: Category management backend
+  description: >-
+    Create the categories table with migration, implement CRUD handlers
+    and routes for category management. GET returns product_count per category.
+    DELETE blocks if any product has only this category, otherwise removes
+    it from products before deleting.
+  spec_checkpoint: true
+  invoke_dev_with: >-
+    Follow existing patterns: raw SQL queries, AdminMiddleware on all routes,
+    respondWithError/respondWithJSON helpers. Place handler in
+    internal/handlers/category.go. Register routes in cmd/server/main.go
+    under /api/admin/categories. Categories table needs: id, name (unique),
+    created_at. Update products table to reference category_id (or keep
+    category as string column and add categories table separately - check
+    existing schema first).
+
+- id: "2"
+  title: User management backend endpoints
+  description: >-
+    Add PUT /api/admin/users/{id} for role updates and
+    DELETE /api/admin/users/{id} for user deletion. Admin cannot
+    delete or demote themselves.
+  spec_checkpoint: true
+  invoke_dev_with: >-
+    Add UpdateUserRole and DeleteUser methods to AdminHandler in
+    internal/handlers/admin.go. Register routes in cmd/server/main.go.
+    PUT validates role is "admin" or "user". DELETE checks the requesting
+    admin is not deleting themselves (compare user ID from JWT claims).
+
+- id: "3"
+  title: Categories admin page
+  description: >-
+    New Categories.vue page with table listing categories (name, product count),
+    add/edit modal, and delete with confirmation. Add to sidebar and router.
+  spec_checkpoint: false
+  invoke_dev_with: >-
+    Follow Products.vue patterns: same table style, modal pattern with
+    v-if toggle. Add CategoriesIcon to AdminLayout.vue menuItems. Add
+    route in router/index.js admin children. Use api from lib/api.js.
+
+- id: "4"
+  title: Users page search and CRUD
+  description: >-
+    Add search input filtering users by name/email, edit modal for role changes,
+    and delete with confirmation. Hide delete button for current admin user.
+  spec_checkpoint: false
+  invoke_dev_with: >-
+    Add search input above table with client-side filtering on first_name,
+    last_name, email. Add Edit button opening modal with role dropdown.
+    Add Delete button with confirm(). Import useAuthStore to compare
+    current user ID and hide delete for self. Follow existing table/modal patterns.
+
+- id: "5"
+  title: Dead Letters admin page
+  description: >-
+    New DeadLetters.vue page listing failed background jobs with retry and
+    delete actions. Add to sidebar and router.
+  spec_checkpoint: false
+  invoke_dev_with: >-
+    Follow Orders.vue table patterns. Columns: Queue, Error, Created, Actions.
+    Retry calls POST /admin/dead-letters/:id, Delete calls
+    DELETE /admin/dead-letters/:id. Show empty state when no items.
+    Add DeadLettersIcon to AdminLayout.vue menuItems. Add route in
+    router/index.js admin children.
+
+- id: "6"
+  title: Product form image upload and category dropdown
+  description: >-
+    Update Products.vue Add/Edit modal with image upload (preview, 5MB max,
+    jpg/png/webp) and change category field from text input to dropdown
+    populated from categories API.
+  spec_checkpoint: false
+  invoke_dev_with: >-
+    Add file input with accept="image/jpeg,image/png,image/webp". Validate
+    file size client-side (5MB). Show preview thumbnail. Upload via
+    POST /images/upload on form submit, then pass image URL in product
+    create/update. Load categories from GET /admin/categories for dropdown.
+    Show existing product images with delete button in edit mode.

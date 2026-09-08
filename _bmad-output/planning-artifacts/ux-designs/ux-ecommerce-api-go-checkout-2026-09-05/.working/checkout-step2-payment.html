@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checkout Wireframe — Step 2: Payment</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: system-ui, -apple-system, sans-serif; background: #F8F6F3; color: #1A1A1A; }
+    
+    .header { background: #fff; border-bottom: 1px solid #E8E4DD; padding: 16px 24px; }
+    .header-inner { max-width: 1152px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; }
+    .logo { font-size: 20px; font-weight: 700; color: #2D6A4F; text-decoration: none; }
+    .secure-text { font-size: 12px; color: #6B6B6B; display: flex; align-items: center; gap: 6px; }
+    
+    .container { max-width: 1152px; margin: 0 auto; padding: 32px 24px; }
+    
+    .progress-bar { display: flex; align-items: center; justify-content: center; margin-bottom: 40px; gap: 0; }
+    .step { display: flex; align-items: center; gap: 10px; }
+    .step-circle { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 14px; }
+    .step-circle.active { background: #2D6A4F; color: #fff; }
+    .step-circle.completed { background: #2D6A4F; color: #fff; }
+    .step-circle.pending { background: #E8E4DD; color: #6B6B6B; }
+    .step-label { font-size: 14px; font-weight: 500; }
+    .step-label.active { color: #1A1A1A; }
+    .step-label.pending { color: #6B6B6B; }
+    .step-line { width: 80px; height: 2px; background: #E8E4DD; margin: 0 16px; }
+    .step-line.completed { background: #2D6A4F; }
+    
+    .checkout-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 32px; }
+    
+    .card { background: #fff; border: 1px solid #E8E4DD; border-radius: 12px; padding: 24px; }
+    .card-title { font-size: 18px; font-weight: 600; margin-bottom: 20px; display: flex; align-items: center; gap: 8px; }
+    
+    .payment-section { border: 2px solid #2D6A4F; border-radius: 12px; padding: 20px; margin-bottom: 20px; }
+    .payment-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+    .payment-title { font-size: 16px; font-weight: 600; }
+    .stripe-badge { display: flex; align-items: center; gap: 6px; font-size: 12px; color: #6B6B6B; }
+    .stripe-logo { font-weight: 700; color: #635BFF; }
+    .payment-element { min-height: 200px; background: #F8F6F3; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #6B6B6B; }
+    
+    .btn-primary { background: #2D6A4F; color: #fff; border: none; padding: 12px 24px; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; }
+    .btn-primary:hover { background: #1B4332; }
+    .btn-secondary { background: transparent; color: #6B6B6B; border: 1px solid #E8E4DD; padding: 12px 24px; border-radius: 8px; font-size: 14px; cursor: pointer; margin-top: 12px; width: 100%; }
+    .btn-secondary:hover { background: #F0EDE8; }
+    
+    .lock-icon { display: flex; align-items: center; gap: 4px; font-size: 12px; color: #fff; margin-top: 8px; justify-content: center; }
+    
+    .order-summary { position: sticky; top: 88px; }
+    .summary-items { max-height: 256px; overflow-y: auto; margin-bottom: 20px; }
+    .summary-item { display: flex; gap: 12px; margin-bottom: 16px; }
+    .summary-item-img { width: 56px; height: 56px; background: #F0EDE8; border-radius: 6px; flex-shrink: 0; }
+    .summary-item-info { flex: 1; }
+    .summary-item-name { font-size: 14px; font-weight: 500; }
+    .summary-item-meta { font-size: 12px; color: #6B6B6B; }
+    .summary-item-price { font-size: 14px; font-weight: 500; }
+    
+    .summary-divider { border: none; border-top: 1px solid #E8E4DD; margin: 16px 0; }
+    .summary-row { display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 12px; }
+    .summary-total { display: flex; justify-content: space-between; font-size: 20px; font-weight: 700; }
+    
+    .shipping-summary { background: #F8F6F3; border-radius: 8px; padding: 12px; margin-bottom: 16px; }
+    .shipping-summary-title { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: #6B6B6B; margin-bottom: 4px; }
+    .shipping-summary-text { font-size: 14px; }
+    .edit-link { font-size: 12px; color: #2D6A4F; cursor: pointer; text-decoration: none; }
+    
+    .trust-bar { margin-top: 24px; padding: 16px; background: #F8F6F3; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
+    .trust-item { display: flex; align-items: center; gap: 8px; font-size: 12px; color: #6B6B6B; }
+    .trust-icon { font-size: 16px; }
+    .trust-icon.green { color: #2D6A4F; }
+    .trust-icon.gray { color: #6B6B6B; }
+    
+    @media (max-width: 768px) {
+      .checkout-grid { grid-template-columns: 1fr; }
+      .step-line { width: 40px; margin: 0 8px; }
+      .step-label { font-size: 12px; }
+      .trust-bar { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="header-inner">
+      <a href="/" class="logo">E-Shop</a>
+      <div class="secure-text">
+        <span>🔒</span>
+        <span>Secure Checkout</span>
+      </div>
+    </div>
+  </header>
+  
+  <div class="container">
+    <!-- Progress Bar -->
+    <div class="progress-bar">
+      <div class="step">
+        <div class="step-circle completed">✓</div>
+        <span class="step-label active">Shipping</span>
+      </div>
+      <div class="step-line completed"></div>
+      <div class="step">
+        <div class="step-circle active">2</div>
+        <span class="step-label active">Payment</span>
+      </div>
+      <div class="step-line"></div>
+      <div class="step">
+        <div class="step-circle pending">3</div>
+        <span class="step-label pending">Review</span>
+      </div>
+    </div>
+    
+    <div class="checkout-grid">
+      <!-- Main Content -->
+      <div>
+        <div class="card">
+          <h2 class="card-title">
+            <span>💳</span>
+            Payment Details
+          </h2>
+          
+          <!-- Stripe Payment Element -->
+          <div class="payment-section">
+            <div class="payment-header">
+              <span class="payment-title">Card Information</span>
+              <div class="stripe-badge">
+                <span>Secured by</span>
+                <span class="stripe-logo">Stripe</span>
+              </div>
+            </div>
+            <div class="payment-element">
+              <div style="text-align: center;">
+                <div style="font-size: 32px; margin-bottom: 12px;">💳</div>
+                <div>Stripe Elements will mount here</div>
+                <div style="font-size: 12px; margin-top: 8px;">Supports cards, Apple Pay, Google Pay</div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Trust badges inline -->
+          <div style="display: flex; gap: 24px; margin-bottom: 20px; flex-wrap: wrap;">
+            <div style="display: flex; align-items: center; gap: 6px; font-size: 12px; color: #6B6B6B;">
+              <span style="color: #2D6A4F;">🛡️</span>
+              <span>PCI DSS compliant</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 6px; font-size: 12px; color: #6B6B6B;">
+              <span style="color: #2D6A4F;">🔒</span>
+              <span>256-bit encryption</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 6px; font-size: 12px; color: #6B6B6B;">
+              <span style="color: #2D6A4F;">✓</span>
+              <span>No card data stored</span>
+            </div>
+          </div>
+          
+          <button class="btn-primary">
+            <span>🔒</span>
+            Place Order — $570.00
+          </button>
+          <div class="lock-icon">
+            <span>🔒</span>
+            <span>Encrypted & secure payment</span>
+          </div>
+          
+          <button class="btn-secondary">
+            ← Back to Shipping
+          </button>
+        </div>
+      </div>
+      
+      <!-- Sidebar -->
+      <div>
+        <div class="card order-summary">
+          <h3 class="card-title">Order Summary</h3>
+          
+          <!-- Shipping Summary -->
+          <div class="shipping-summary">
+            <div class="shipping-summary-title">Shipping to</div>
+            <div class="shipping-summary-text">John Doe</div>
+            <div class="shipping-summary-text">123 Main Street, New York, NY 10001</div>
+            <a class="edit-link" href="#">Edit</a>
+          </div>
+          
+          <div class="summary-items">
+            <div class="summary-item">
+              <div class="summary-item-img"></div>
+              <div class="summary-item-info">
+                <div class="summary-item-name">Forever Pants</div>
+                <div class="summary-item-meta">Size: M / Color: Navy</div>
+                <div class="summary-item-meta">Qty: 1</div>
+              </div>
+              <span class="summary-item-price">$260.00</span>
+            </div>
+            <div class="summary-item">
+              <div class="summary-item-img"></div>
+              <div class="summary-item-info">
+                <div class="summary-item-name">Forever Shirt</div>
+                <div class="summary-item-meta">Size: L / Color: White</div>
+                <div class="summary-item-meta">Qty: 2</div>
+              </div>
+              <span class="summary-item-price">$310.00</span>
+            </div>
+          </div>
+          
+          <hr class="summary-divider">
+          
+          <div class="summary-row">
+            <span>Subtotal</span>
+            <span>$570.00</span>
+          </div>
+          <div class="summary-row">
+            <span>Shipping</span>
+            <span style="color: #2D6A4F; font-weight: 500;">Free</span>
+          </div>
+          
+          <hr class="summary-divider">
+          
+          <div class="summary-total">
+            <span>Total</span>
+            <span>$570.00</span>
+          </div>
+          
+          <!-- Trust Bar -->
+          <div class="trust-bar">
+            <div class="trust-item">
+              <span class="trust-icon green">🛡️</span>
+              <span>Money-back guarantee</span>
+            </div>
+            <div class="trust-item">
+              <span class="trust-icon gray">👥</span>
+              <span>47 customers today</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

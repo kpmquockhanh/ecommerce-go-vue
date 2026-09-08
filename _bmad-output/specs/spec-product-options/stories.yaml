@@ -1,0 +1,112 @@
+- id: "1"
+  title: Database migration + option group models + data migration
+  description: >-
+    Create product_option_groups, product_option_values, variant_option_values,
+    and product_customization_fields tables. Add new Go models and DTOs. Migrate
+    existing size/color variant data to option groups. Add customization_data
+    JSONB column to cart_items and order_items. Drop size/color columns from
+    product_variants.
+  invoke_dev_with: >-
+    Follow data-model-changes.md companion for exact SQL and Go structs. Add new
+    tables in database.go migrations. Migrate existing data: for each product
+    with variants, create "Size" and "Color" option groups, insert distinct
+    size/color values as option values, link existing variants via
+    variant_option_values junction table. Add ProductOptionGroup,
+    ProductOptionValue, ProductCustomizationField, ProductWithOptions models to
+    models/product.go. Update ProductVariant to remove Size/Color fields, add
+    Label and OptionValues fields. Update CreateVariantRequest and
+    UpdateVariantRequest to use OptionValueIDs. Update ProductWithVariants to
+    use ProductWithOptions. Add customization_data column to cart_items and
+    order_items tables. Drop size and color columns from product_variants after
+    migration.
+- id: "2"
+  title: Option group + option value admin CRUD
+  description: >-
+    Implement CAP-1: admin endpoints for creating, updating, deleting option
+    groups and their option values on a per-product basis, with reordering
+    support.
+  invoke_dev_with: >-
+    Add option group and option value repository methods to ProductRepository
+    (CreateOptionGroup, UpdateOptionGroup, DeleteOptionGroup,
+    GetOptionGroupsByProduct, CreateOptionValue, UpdateOptionValue,
+    DeleteOptionValue, ReorderOptionValues). Add admin endpoints:
+    POST/PUT/DELETE /api/admin/products/{id}/option-groups/{group_id},
+    POST/PUT/DELETE
+    .../option-groups/{group_id}/values/{value_id},
+    PUT .../option-groups/{group_id}/reorder. Validate max 6 option groups per
+    product, max 100 values per group, max 50 chars per value label. Enforce
+    UNIQUE(product_id, name) on groups and UNIQUE(group_id, label) on values.
+    Handle cascade: deleting a group deletes its values. Deleting a product
+    cascades to groups and values.
+- id: "3"
+  title: Variant CRUD rewrite — option value linkage + computed label
+  description: >-
+    Implement CAP-2 and CAP-6: update variant create/update endpoints to accept
+    option_value_ids instead of size/color, compute variant label dynamically
+    from linked option values, validate exactly one value per option group.
+  invoke_dev_with: >-
+    Rewrite CreateVariant handler to accept OptionValueIDs array. Validate:
+    exactly one value per option group on the product, no duplicate combination
+    (same set of option_value_ids) within the same product, all option_value_ids
+    belong to the product's option groups. Insert into variant_option_values
+    junction table after creating the variant row. Compute variant label as
+    "Value1 / Value2 / ..." in option group sort order. Rewrite UpdateVariant
+    handler to accept optional OptionValueIDs for reassignment. Rewrite
+    GetVariants repository method to JOIN variant_option_values and
+    product_option_values/product_option_groups to populate Label and
+    OptionValues on each variant. Delete variant_option_values rows on variant
+    delete.
+- id: "4"
+  title: Storefront public options endpoint + dynamic display
+  description: >-
+    Implement CAP-3 and CAP-4: public endpoint returning option groups/values
+    for a product, storefront rendering of dynamic option selectors, and price
+    modifier calculation when options are selected.
+  invoke_dev_with: >-
+    Add public GET /api/products/{id}/options endpoint returning option groups
+    with their values (label, sort_order, price_adjustment). Update product
+    detail handler to use ProductWithOptions response shape — include
+    option_groups, computed variant labels, and customizations. Update frontend
+    ProductDetail.vue: replace hardcoded variant.size/variant.color buttons with
+    dynamic selectors — render one button group per option group, each button
+    labeled with option value label. Track selected option value IDs in
+    component state. Match selected combination to variant, show stock/SKU. Show
+    "Unavailable" for unmatched combinations. Disable out-of-stock option values
+    (values that only belong to out-of-stock variants). Calculate displayed
+    price as base_price + sum(price_adjustment of selected values). Recalculate
+    on every selection change.
+- id: "5"
+  title: Customization fields admin CRUD + cart/order integration
+  description: >-
+    Implement CAP-5: admin endpoints for customization fields, store
+    customization data on cart items, snapshot into order items at checkout.
+  invoke_dev_with: >-
+    Add customization field repository methods to ProductRepository
+    (CreateCustomizationField, UpdateCustomizationField,
+    DeleteCustomizationField, GetCustomizationFieldsByProduct,
+    ReorderCustomizationFields). Add admin endpoints:
+    POST/PUT/DELETE /api/admin/products/{id}/customizations/{field_id},
+    PUT .../customizations/reorder. Validate max 5 fields per product, max 500
+    chars for text input type. Update AddToCartRequest model to accept
+    CustomizationData map[int]string (field_id -> value). Validate required
+    fields are present in cart handler. Store customization_data as JSONB in
+    cart_items. In checkout handler, snapshot customization_data into
+    order_items. Update cart display to show customization values. Update order
+    detail to display customization values.
+- id: "6"
+  title: Integration — update all handlers, tests, and cleanup
+  description: >-
+    Update all existing handlers and repositories that reference the old
+    variant model. Ensure list/detail responses include new option structures.
+    Fix broken tests, add tests for new functionality.
+  invoke_dev_with: >-
+    Update product repository List and FindBySlug to use ProductWithOptions
+    response shape. Update cart handler display to use computed variant label.
+    Update order handler to use computed variant label and snapshot
+    customization_data. Update webhook handler stock restore to work with
+    updated variant model. Update mockProductRepo in product_test.go to match
+    new repository interface. Add test cases for option group CRUD, variant
+    creation with option values, customization field CRUD. Run all existing
+    tests, fix any broken ones. Verify frontend renders correctly with new
+    option structures. Ensure products with no option groups display "Add to
+    Cart" directly without variant selectors.

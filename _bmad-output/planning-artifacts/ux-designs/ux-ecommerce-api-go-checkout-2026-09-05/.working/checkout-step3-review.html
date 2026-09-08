@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checkout Wireframe — Step 3: Review</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: system-ui, -apple-system, sans-serif; background: #F8F6F3; color: #1A1A1A; }
+    
+    .header { background: #fff; border-bottom: 1px solid #E8E4DD; padding: 16px 24px; }
+    .header-inner { max-width: 1152px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; }
+    .logo { font-size: 20px; font-weight: 700; color: #2D6A4F; text-decoration: none; }
+    .secure-text { font-size: 12px; color: #6B6B6B; display: flex; align-items: center; gap: 6px; }
+    
+    .container { max-width: 1152px; margin: 0 auto; padding: 32px 24px; }
+    
+    .progress-bar { display: flex; align-items: center; justify-content: center; margin-bottom: 40px; gap: 0; }
+    .step { display: flex; align-items: center; gap: 10px; }
+    .step-circle { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 14px; }
+    .step-circle.active { background: #2D6A4F; color: #fff; }
+    .step-circle.completed { background: #2D6A4F; color: #fff; }
+    .step-circle.pending { background: #E8E4DD; color: #6B6B6B; }
+    .step-label { font-size: 14px; font-weight: 500; }
+    .step-label.active { color: #1A1A1A; }
+    .step-label.pending { color: #6B6B6B; }
+    .step-line { width: 80px; height: 2px; background: #E8E4DD; margin: 0 16px; }
+    .step-line.completed { background: #2D6A4F; }
+    
+    .checkout-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 32px; }
+    
+    .card { background: #fff; border: 1px solid #E8E4DD; border-radius: 12px; padding: 24px; }
+    .card-title { font-size: 18px; font-weight: 600; margin-bottom: 20px; display: flex; align-items: center; gap: 8px; }
+    
+    .review-section { margin-bottom: 24px; }
+    .review-section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+    .review-section-title { font-size: 14px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: #6B6B6B; }
+    .edit-link { font-size: 12px; color: #2D6A4F; cursor: pointer; text-decoration: none; font-weight: 500; }
+    
+    .shipping-card { background: #F8F6F3; border-radius: 8px; padding: 16px; }
+    .shipping-name { font-weight: 600; margin-bottom: 4px; }
+    .shipping-address { font-size: 14px; color: #6B6B6B; line-height: 1.5; }
+    
+    .payment-card { background: #F8F6F3; border-radius: 8px; padding: 16px; display: flex; align-items: center; gap: 16px; }
+    .payment-icon { font-size: 24px; }
+    .payment-info { flex: 1; }
+    .payment-method { font-weight: 600; }
+    .payment-details { font-size: 14px; color: #6B6B6B; }
+    
+    .items-list { display: flex; flex-direction: column; gap: 12px; }
+    .item-row { display: flex; gap: 12px; padding: 12px; background: #F8F6F3; border-radius: 8px; }
+    .item-img { width: 64px; height: 64px; background: #E8E4DD; border-radius: 6px; flex-shrink: 0; }
+    .item-info { flex: 1; }
+    .item-name { font-weight: 500; }
+    .item-meta { font-size: 13px; color: #6B6B6B; }
+    .item-price { font-weight: 600; }
+    
+    .btn-primary { background: #2D6A4F; color: #fff; border: none; padding: 14px 24px; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; }
+    .btn-primary:hover { background: #1B4332; }
+    .btn-secondary { background: transparent; color: #6B6B6B; border: 1px solid #E8E4DD; padding: 12px 24px; border-radius: 8px; font-size: 14px; cursor: pointer; margin-top: 12px; width: 100%; }
+    .btn-secondary:hover { background: #F0EDE8; }
+    
+    .lock-icon { display: flex; align-items: center; gap: 4px; font-size: 12px; color: #fff; margin-top: 8px; justify-content: center; }
+    
+    .order-summary { position: sticky; top: 88px; }
+    .summary-divider { border: none; border-top: 1px solid #E8E4DD; margin: 16px 0; }
+    .summary-row { display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 12px; }
+    .summary-total { display: flex; justify-content: space-between; font-size: 20px; font-weight: 700; }
+    
+    .trust-bar { margin-top: 24px; padding: 16px; background: #F8F6F3; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
+    .trust-item { display: flex; align-items: center; gap: 8px; font-size: 12px; color: #6B6B6B; }
+    .trust-icon { font-size: 16px; }
+    .trust-icon.green { color: #2D6A4F; }
+    .trust-icon.gray { color: #6B6B6B; }
+    
+    @media (max-width: 768px) {
+      .checkout-grid { grid-template-columns: 1fr; }
+      .step-line { width: 40px; margin: 0 8px; }
+      .step-label { font-size: 12px; }
+      .trust-bar { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="header-inner">
+      <a href="/" class="logo">E-Shop</a>
+      <div class="secure-text">
+        <span>🔒</span>
+        <span>Secure Checkout</span>
+      </div>
+    </div>
+  </header>
+  
+  <div class="container">
+    <!-- Progress Bar -->
+    <div class="progress-bar">
+      <div class="step">
+        <div class="step-circle completed">✓</div>
+        <span class="step-label active">Shipping</span>
+      </div>
+      <div class="step-line completed"></div>
+      <div class="step">
+        <div class="step-circle completed">✓</div>
+        <span class="step-label active">Payment</span>
+      </div>
+      <div class="step-line completed"></div>
+      <div class="step">
+        <div class="step-circle active">3</div>
+        <span class="step-label active">Review</span>
+      </div>
+    </div>
+    
+    <div class="checkout-grid">
+      <!-- Main Content -->
+      <div>
+        <div class="card">
+          <h2 class="card-title">
+            <span>📋</span>
+            Review Your Order
+          </h2>
+          
+          <!-- Shipping Review -->
+          <div class="review-section">
+            <div class="review-section-header">
+              <span class="review-section-title">Shipping Address</span>
+              <a class="edit-link" href="#">Edit</a>
+            </div>
+            <div class="shipping-card">
+              <div class="shipping-name">John Doe</div>
+              <div class="shipping-address">
+                123 Main Street<br>
+                New York, NY 10001<br>
+                United States
+              </div>
+            </div>
+          </div>
+          
+          <!-- Payment Review -->
+          <div class="review-section">
+            <div class="review-section-header">
+              <span class="review-section-title">Payment Method</span>
+              <a class="edit-link" href="#">Edit</a>
+            </div>
+            <div class="payment-card">
+              <span class="payment-icon">💳</span>
+              <div class="payment-info">
+                <div class="payment-method">Visa ending in 4242</div>
+                <div class="payment-details">Expires 12/24</div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Items Review -->
+          <div class="review-section">
+            <div class="review-section-header">
+              <span class="review-section-title">Items (3)</span>
+            </div>
+            <div class="items-list">
+              <div class="item-row">
+                <div class="item-img"></div>
+                <div class="item-info">
+                  <div class="item-name">Forever Pants</div>
+                  <div class="item-meta">Size: M / Color: Navy</div>
+                  <div class="item-meta">Qty: 1</div>
+                </div>
+                <span class="item-price">$260.00</span>
+              </div>
+              <div class="item-row">
+                <div class="item-img"></div>
+                <div class="item-info">
+                  <div class="item-name">Forever Shirt</div>
+                  <div class="item-meta">Size: L / Color: White</div>
+                  <div class="item-meta">Qty: 2</div>
+                </div>
+                <span class="item-price">$310.00</span>
+              </div>
+            </div>
+          </div>
+          
+          <button class="btn-primary">
+            <span>🔒</span>
+            Place Order — $570.00
+          </button>
+          <div class="lock-icon">
+            <span>🔒</span>
+            <span>Encrypted & secure payment</span>
+          </div>
+          
+          <button class="btn-secondary">
+            ← Back to Payment
+          </button>
+        </div>
+      </div>
+      
+      <!-- Sidebar -->
+      <div>
+        <div class="card order-summary">
+          <h3 class="card-title">Order Summary</h3>
+          
+          <div class="summary-row">
+            <span>Subtotal (3 items)</span>
+            <span>$570.00</span>
+          </div>
+          <div class="summary-row">
+            <span>Shipping</span>
+            <span style="color: #2D6A4F; font-weight: 500;">Free</span>
+          </div>
+          <div class="summary-row">
+            <span>Tax</span>
+            <span>$0.00</span>
+          </div>
+          
+          <hr class="summary-divider">
+          
+          <div class="summary-total">
+            <span>Total</span>
+            <span>$570.00</span>
+          </div>
+          
+          <!-- Trust Bar -->
+          <div class="trust-bar">
+            <div class="trust-item">
+              <span class="trust-icon green">🛡️</span>
+              <span>Money-back guarantee</span>
+            </div>
+            <div class="trust-item">
+              <span class="trust-icon gray">👥</span>
+              <span>47 customers today</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
