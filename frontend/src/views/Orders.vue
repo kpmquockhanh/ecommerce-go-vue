@@ -30,7 +30,7 @@
           <span class="text-secondary">{{ formatDate(record.created_at) }}</span>
         </template>
         <template v-if="column.key === 'status'">
-          <a-tag :color="statusClass(record.status)">{{ record.status }}</a-tag>
+          <a-tag :class="statusClass(record.status)">{{ record.status }}</a-tag>
         </template>
         <template v-if="column.key === 'items_count'">
           <span class="text-secondary">{{ record.items_count }}</span>

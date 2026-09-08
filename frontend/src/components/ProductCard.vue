@@ -15,7 +15,7 @@
       </div>
 
       <div v-if="badge" class="product-card-badge">
-        <a-tag :color="badgeColor">{{ badge }}</a-tag>
+        <a-tag :class="badgeClass">{{ badge }}</a-tag>
       </div>
 
       <div class="product-card-overlay">
@@ -80,10 +80,10 @@ const badge = computed(() => {
   return null
 })
 
-const badgeColor = computed(() => {
-  if (props.product.is_new) return 'green'
-  if (props.product.on_sale) return 'red'
-  return 'orange'
+const badgeClass = computed(() => {
+  if (props.product.is_new) return 'tag-photo-badge tag-photo-badge--new'
+  if (props.product.on_sale) return 'tag-photo-badge tag-photo-badge--sale'
+  return 'tag-photo-badge tag-photo-badge--low-stock'
 })
 
 async function handleQuickAdd() {

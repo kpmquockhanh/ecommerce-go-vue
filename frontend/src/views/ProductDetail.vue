@@ -57,7 +57,7 @@
       <div class="product-info-col">
         <div class="mb-8">
           <template v-if="product.categories?.length">
-            <a-tag v-for="cat in product.categories" :key="cat.id" color="green" class="product-category-tag">
+            <a-tag v-for="cat in product.categories" :key="cat.id" class="tag-success tag-uppercase">
               {{ cat.name }}
             </a-tag>
           </template>

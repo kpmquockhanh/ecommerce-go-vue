@@ -5,7 +5,7 @@
     <template v-else-if="order">
       <div class="order-detail-header">
         <h1 class="page-heading">Order #{{ order.id }}</h1>
-        <a-tag :color="statusClass(order.status)">{{ order.status }}</a-tag>
+        <a-tag :class="statusClass(order.status)">{{ order.status }}</a-tag>
       </div>
 
       <div class="order-detail-cards mb-32">

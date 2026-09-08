@@ -84,7 +84,7 @@
           <a-tag
             v-for="catId in filters.categories"
             :key="catId"
-            color="green"
+            class="tag-success"
             closable
             @close="removeCategory(catId)"
           >
@@ -92,7 +92,7 @@
           </a-tag>
           <a-tag
             v-if="filters.minPrice || filters.maxPrice"
-            color="green"
+            class="tag-success"
             closable
             @close="clearPriceFilter"
           >

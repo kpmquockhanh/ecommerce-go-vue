@@ -8,8 +8,7 @@
     </span>
     <a-tag
       v-if="showSavePercent && originalPrice && originalPrice > price"
-      color="error"
-      class="ml-8"
+      class="tag-solid-error ml-8"
     >
       Save {{ savePercent }}%
     </a-tag>

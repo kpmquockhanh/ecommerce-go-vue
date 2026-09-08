@@ -147,3 +147,7 @@
 - source_spec: `_bmad-output/implementation-artifacts/spec-storefront-image-display-fix.md`
   summary: compare_at_price is never wired into the customer-facing storefront -- PriceDisplay.vue already supports an originalPrice/strikethrough/"Save X%" display, but neither ProductCard.vue nor ProductDetail.vue passes compare_at_price into it
   evidence: frontend/src/components/PriceDisplay.vue supports originalPrice; frontend/src/components/ProductCard.vue and frontend/src/views/ProductDetail.vue's <PriceDisplay> usages don't pass compare_at_price. Pre-existing, unrelated to this fix.
+
+- source_spec: `_bmad-output/implementation-artifacts/spec-tag-redesign.md`
+  summary: ProductCard.vue's badgeClass computed has no explicit "no badge" branch, defaulting to the low-stock class; correctness today depends entirely on the separate badge computed's v-if guarding it
+  evidence: Pre-existing coupling (the prior badgeColor computed had the same unconditional 'orange' fallback); spec required preserving conditionals exactly, so restructuring was out of scope for this change

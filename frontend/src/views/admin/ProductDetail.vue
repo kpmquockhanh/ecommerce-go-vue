@@ -7,7 +7,7 @@
         </a-button>
         <h1 class="page-heading">{{ product.name }}</h1>
       </div>
-      <a-tag :color="product.status === 'published' ? 'green' : 'default'">
+      <a-tag :class="product.status === 'published' ? 'tag-success' : 'tag-neutral'">
         {{ product.status }}
       </a-tag>
     </div>
@@ -74,7 +74,7 @@
           <a-card v-for="(img, idx) in images" :key="img.path" size="small" class="admin-image-card">
             <img :src="img.url" class="admin-image-card-thumb" />
             <div style="margin-top: 8px">
-              <a-tag v-if="img.isPrimary" color="green">Primary</a-tag>
+              <a-tag v-if="img.isPrimary" class="tag-success">Primary</a-tag>
             </div>
             <a-space style="margin-top: 8px">
               <a-button size="small" :disabled="idx === 0" @click="moveImage(idx, -1)">↑</a-button>
@@ -102,7 +102,7 @@
         <a-card v-for="group in optionGroups" :key="group.id" style="margin-bottom: 12px">
           <template #title>
             <div style="display: flex; justify-content: space-between; align-items: center">
-              <span>{{ group.name }} <a-tag>{{ group.values?.length || 0 }} values</a-tag></span>
+              <span>{{ group.name }} <a-tag class="tag-neutral">{{ group.values?.length || 0 }} values</a-tag></span>
               <a-space>
                 <a-button size="small" @click="editGroup(group)">Edit</a-button>
                 <a-button size="small" danger @click="deleteGroup(group)">Delete</a-button>
@@ -219,7 +219,7 @@
                 size="small"
                 style="width: 160px"
               />
-              <a-tag v-else>{{ record.sku || '—' }}</a-tag>
+              <a-tag v-else class="tag-neutral">{{ record.sku || '—' }}</a-tag>
             </template>
             <template v-if="column.key === 'stock'">
               <a-input-number
@@ -229,10 +229,10 @@
                 size="small"
                 style="width: 100px"
               />
-              <a-tag v-else :color="record.stock > 0 ? 'green' : 'red'">{{ record.stock }}</a-tag>
+              <a-tag v-else :class="record.stock > 0 ? 'tag-success' : 'tag-error'">{{ record.stock }}</a-tag>
             </template>
             <template v-if="column.key === 'option_values'">
-              <a-tag v-for="ov in (record.option_values || [])" :key="ov.option_value_id" style="margin-bottom: 2px">
+              <a-tag v-for="ov in (record.option_values || [])" :key="ov.option_value_id" class="tag-neutral" style="margin-bottom: 2px">
                 {{ ov.option_group_name }}: {{ ov.value }}
               </a-tag>
             </template>
@@ -307,10 +307,10 @@
               <span class="admin-cell-bold">{{ record.name }}</span>
             </template>
             <template v-if="column.key === 'field_type'">
-              <a-tag>{{ record.field_type }}</a-tag>
+              <a-tag class="tag-neutral">{{ record.field_type }}</a-tag>
             </template>
             <template v-if="column.key === 'required'">
-              <a-tag :color="record.required ? 'orange' : 'default'">{{ record.required ? 'Required' : 'Optional' }}</a-tag>
+              <a-tag :class="record.required ? 'tag-warning' : 'tag-neutral'">{{ record.required ? 'Required' : 'Optional' }}</a-tag>
             </template>
             <template v-if="column.key === 'default_value'">
               {{ record.default_value || '—' }}

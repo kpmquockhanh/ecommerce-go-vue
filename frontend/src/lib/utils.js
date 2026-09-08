@@ -12,14 +12,14 @@ export function formatDate(dateString) {
 
 export function statusClass(status) {
   const map = {
-    pending: 'warning',
-    processing: 'warning',
-    shipped: 'green',
-    delivered: 'green',
-    cancelled: 'red',
-    refunded: 'red',
-    active: 'green',
-    inactive: 'default',
+    pending: 'tag-warning',
+    processing: 'tag-warning',
+    shipped: 'tag-success',
+    delivered: 'tag-success',
+    cancelled: 'tag-error',
+    refunded: 'tag-error',
+    active: 'tag-success',
+    inactive: 'tag-neutral',
   }
-  return map[status] || 'default'
+  return map[status] || 'tag-neutral'
 }

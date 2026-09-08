@@ -13,7 +13,7 @@
       </div>
       <div class="hero-content">
         <div class="hero-text">
-          <a-tag color="green" class="mb-24">New Season Collection</a-tag>
+          <a-tag class="tag-success mb-24">New Season Collection</a-tag>
           <h1 class="hero-title">
             Sustainable Style<br />for Modern Living
           </h1>

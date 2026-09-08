@@ -26,7 +26,7 @@
           <span class="admin-cell-muted">{{ record.email }}</span>
         </template>
         <template v-if="column.key === 'role'">
-          <a-tag :color="record.role === 'admin' ? 'purple' : 'default'">{{ record.role }}</a-tag>
+          <a-tag :class="record.role === 'admin' ? 'tag-plum' : 'tag-neutral'">{{ record.role }}</a-tag>
         </template>
         <template v-if="column.key === 'joined'">
           <span class="admin-cell-muted">{{ formatDate(record.created_at) }}</span>

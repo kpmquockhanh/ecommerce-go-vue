@@ -32,7 +32,7 @@
             <span class="admin-cell-bold">#{{ record.id }}</span>
           </template>
           <template v-if="column.key === 'status'">
-            <a-tag :color="statusClass(record.status)">{{ record.status }}</a-tag>
+            <a-tag :class="statusClass(record.status)">{{ record.status }}</a-tag>
           </template>
           <template v-if="column.key === 'total'">
             ${{ (record.total / 100).toFixed(2) }}

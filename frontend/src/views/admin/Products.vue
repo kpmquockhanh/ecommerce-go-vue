@@ -21,7 +21,7 @@
         </template>
         <template v-if="column.key === 'category'">
           <template v-if="record.category_names?.length">
-            <a-tag v-for="name in record.category_names" :key="name">{{ name }}</a-tag>
+            <a-tag v-for="name in record.category_names" :key="name" class="tag-neutral">{{ name }}</a-tag>
           </template>
           <span v-else class="admin-hint">Uncategorized</span>
         </template>
